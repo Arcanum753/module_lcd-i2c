@@ -9,8 +9,8 @@
 #include "core_sys/eertos.h"
 #include "version.h"
 
-CLASS_MODULE_I2C_LCD module_lcd_i2c(false);
-CLASS_MODULE_I2C_LCD::CLASS_MODULE_I2C_LCD(bool _in) { dumb = _in; _lcd = NULL; }
+CLASS_MODULE_I2C_LCD module_lcd_i2c;
+CLASS_MODULE_I2C_LCD::CLASS_MODULE_I2C_LCD() { _lcd = NULL; }
 
 #if defined(ESP32)
 void CLASS_MODULE_I2C_LCD::setFs(fs::LittleFSFS* fs)

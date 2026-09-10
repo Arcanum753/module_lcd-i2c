@@ -39,7 +39,7 @@ typedef struct {
 
 class CLASS_MODULE_I2C_LCD {
 public:
-    CLASS_MODULE_I2C_LCD(bool _in);
+    CLASS_MODULE_I2C_LCD();
 #if ESP32
     void setFs(fs::LittleFSFS* fs);
 #elif defined(ESP8266)
@@ -69,7 +69,6 @@ private:
     static void _lcdUpdateTask();
 
 protected:
-    bool dumb;
 #if ESP32
     fs::LittleFSFS*               _fs;
 #elif defined(ESP8266)
