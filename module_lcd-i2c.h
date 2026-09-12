@@ -18,24 +18,7 @@
 #include <LittleFS.h>
 #endif
 
-#if defined(ESP32)
-#define LCD_I2C_SDA  21
-#define LCD_I2C_SCL  22
-#elif defined(ESP8266)
-#define LCD_I2C_SDA  4
-#define LCD_I2C_SCL  5
-#endif
-
-#define CONFIG_FILE_LCD_I2C       "/config_lcd-i2c.json"
-#define LCD_I2C_MAX_ROWS          4
-#define LCD_I2C_MAX_LINE_LEN      40
-
-typedef struct {
-    uint8_t i2cAddr;
-    uint8_t cols;
-    uint8_t rows;
-    bool    backlight;
-} strLcdConfig;
+#include "module_lcd-i2c_types.h"
 
 class CLASS_MODULE_I2C_LCD {
 public:
