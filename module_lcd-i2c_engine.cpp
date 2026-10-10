@@ -1,9 +1,10 @@
 #include "core_web/FSWebServerLib.h"
 
-#include "core_ntp/NtpClientLib.h"
-
 #include "module_lcd-i2c.h"
+#include "core_sys/core_sys.h"
 #include "core_sys/eertos.h"
+
+#include "common/TimeLib.h"
 
 #include <Wire.h>
 
@@ -30,38 +31,27 @@ void CLASS_MODULE_I2C_LCD::_initDisplay() {
 void CLASS_MODULE_I2C_LCD::_applyLines() {
     if (!_lcd) { return; }
 
-    bool ntpSynced = (NTP.getLastNTPSync() > 0);
+    bool timeOk = core_sys.timeValid();
+    time_t t = core_sys.timeNow();
 
     for (uint8_t r = 0; r < _config.rows && r < LCD_I2C_MAX_ROWS; r++) {
         String line = _displayLines[r];
         String out;
 
         if (line == "date") {
-            if (ntpSynced) {
-                String dt = NTP.getTimeDateString();
-                int spaceIdx = dt.indexOf(' ');
-                if (spaceIdx > 0) {
-                    String d = dt.substring(0, spaceIdx);
-                    if (d.length() >= 10) {
-                        out = d.substring(0, 10);
-                    } else {
-                        out = d;
-                    }
-                } else {
-                    out = "--.--.----";
-                }
+            if (timeOk && t > 0) {
+                char db[16];
+                snprintf(db, sizeof(db), "%04u-%02u-%02u",
+                         (unsigned)year(t), (unsigned)month(t), (unsigned)day(t));
+                out = db;
             } else {
                 out = "--.--.----";
             }
         } else if (line == "time") {
-            if (ntpSynced) {
-                String dt = NTP.getTimeDateString();
-                int spaceIdx = dt.indexOf(' ');
-                if (spaceIdx > 0 && (int)dt.length() > spaceIdx + 8) {
-                    out = dt.substring(spaceIdx + 1, spaceIdx + 9);
-                } else {
-                    out = "--:--:--";
-                }
+            if (timeOk && t > 0) {
+                char tb[12];
+                snprintf(tb, sizeof(tb), "%02d:%02d:%02d", hour(t), minute(t), second(t));
+                out = tb;
             } else {
                 out = "--:--:--";
             }

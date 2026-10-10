@@ -1,6 +1,5 @@
 #include "core_web/FSWebServerLib.h"
 
-#include "core_ntp/NtpClientLib.h"
 #include "core_json/core_json.h"
 
 #include "module_lcd-i2c.h"
@@ -8,6 +7,18 @@
 #include "module_lcd-i2c_version.h"
 #include "core_sys/eertos.h"
 #include "version.h"
+
+// Uptime из millis() (ранее брали у NTPClientLib).
+static String lcdUptimeString() {
+    uint32_t s = millis() / 1000UL;
+    uint32_t d = s / 86400UL; s %= 86400UL;
+    uint32_t h = s / 3600UL;  s %= 3600UL;
+    uint32_t m = s / 60UL;    s %= 60UL;
+    char buf[24];
+    if (d > 0) { snprintf(buf, sizeof(buf), "%ud %02u:%02u:%02u", (unsigned)d, (unsigned)h, (unsigned)m, (unsigned)s); }
+    else       { snprintf(buf, sizeof(buf), "%02u:%02u:%02u", (unsigned)h, (unsigned)m, (unsigned)s); }
+    return String(buf);
+}
 
 CLASS_MODULE_I2C_LCD module_lcd_i2c;
 CLASS_MODULE_I2C_LCD::CLASS_MODULE_I2C_LCD() { _lcd = NULL; }
@@ -99,7 +110,7 @@ void CLASS_MODULE_I2C_LCD::handleInfo(AsyncWebServerRequest *request) {
     values += "verfw|"  + String(FIRMWARE_VERSION)                       + "|div\n";
     values += "verfs|"  + ESPHTTPServer.getFsVersionStr()                + "|div\n";
     values += "verm|"   + getVersionStr()                                + "|div\n";
-    values += "uptime|" + NTP.getUptimeString()                          + "|div\n";
+    values += "uptime|" + lcdUptimeString()                              + "|div\n";
     values += "i2cAddr|" + String(_config.i2cAddr, HEX)                  + "|input\n";
     values += "cols|"   + String(_config.cols)                           + "|input\n";
     values += "rows|"   + String(_config.rows)                           + "|input\n";
@@ -120,7 +131,7 @@ void CLASS_MODULE_I2C_LCD::handleSysInfo(AsyncWebServerRequest *request) {
     values += "verfw|"  + String(FIRMWARE_VERSION) + "|div\n";
     values += "verfs|"  + ESPHTTPServer.getFsVersionStr() + "|div\n";
     values += "verm|"   + getVersionStr()          + "|div\n";
-    values += "uptime|" + NTP.getUptimeString()    + "|div\n";
+    values += "uptime|" + lcdUptimeString()        + "|div\n";
     request->send(200, "text/plain", values);
 }
 

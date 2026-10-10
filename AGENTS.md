@@ -12,7 +12,7 @@
 - **Registry:** `object=module_lcd_i2c`, `define=MODULE_LCD_I2C`, `web=1`, `loop=0` (без `namespace`/`res`/`prio`)
 - **Только для платформы:** обе (ESP8266/ESP32)
 - **Зависит от модулей:** —
-- **Зависит от ядра:** `core_web`, `core_sys`, `core_json`, `core_ntp` (маски даты/времени)
+- **Зависит от ядра:** `core_web`, `core_sys`, `core_json` (маски даты/времени — `core_sys.timeNow()`)
 
 ## Назначение
 
@@ -23,7 +23,7 @@
 
 - FR-LCD-1: Инициализация дисплея по I2C (`LCD_I2C_SDA/SCL`); лимиты `LCD_I2C_MAX_ROWS=4`, `LCD_I2C_MAX_LINE_LEN=40`.
 - FR-LCD-2: Конфиг `/config_lcd-i2c.json`: `i2cAddr` (по умолчанию `0x27`), `cols`, `rows`, `backlight`, `display_lines[]`.
-- FR-LCD-3: Поддержка масок даты/времени в строках; перерисовка раз в секунду.
+- FR-LCD-3: Поддержка масок даты/времени в строках; время — `core_sys.timeNow()` (валидность — `core_sys.timeValid()`); перерисовка раз в секунду.
 - FR-LCD-4: Включение/выключение подсветки без перезагрузки.
 
 ## Аппаратные интерфейсы
