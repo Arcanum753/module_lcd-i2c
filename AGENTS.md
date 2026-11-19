@@ -45,8 +45,9 @@
 
 ## Слоистая структура
 
-Из `../../LAYERS.md`: `module_lcd-i2c` — LCD I2C: вывод строк, backlight; сейчас
-`strLcdConfig`, пин-define'ы; выделить `_types.h`, `_engine.cpp`.
+Из `../../LAYERS.md`: `module_lcd-i2c` — LCD I2C: вывод строк, backlight. Слои выделены:
+`module_lcd-i2c_types.h` (define'ы, пин-define'ы, `strLcdConfig`), `module_lcd-i2c.cpp`
+(шаблонный блок), `module_lcd-i2c_engine.cpp` (вывод/логика).
 
 ## Тестирование
 
